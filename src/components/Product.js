@@ -1,10 +1,28 @@
 import { StarIcon } from '@heroicons/react/solid'
 import Image from 'next/image'
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import {addToBasket} from "../slices/basketSlice";
 
 
 function Product({ id, title, price, description, category, image, rating }) {
+    const dispatch = useDispatch();
     const [hasPrime] = useState(Math.random() < 0.5)
+
+    const addItemToBasket = () =>{
+        const product = {
+            id, 
+            title,
+            price,
+            description,
+            category, 
+            image, 
+            rating,
+            hasPrime
+        };
+        dispatch(addToBasket(product));        
+    }
+
     return (
         <div className='relative flex flex-col m-5 bg-white z-30 p-10'>
             <p className='absolute top-2 right-2 text-xs italic text-gray-400'>{category}</p>
@@ -15,7 +33,7 @@ function Product({ id, title, price, description, category, image, rating }) {
                     Array(Math.round(rating.rate, 1))
                         .fill()
                         .map((_, i) => (
-                            <StarIcon className='h-5 text-yellow-500' />
+                            <StarIcon key={i} className='h-5 text-yellow-500' />
                         ))
                 }
                 <p className='ml-2 text-sm text-gray-500'>{" "}{rating.count} Reviews</p>
@@ -30,7 +48,7 @@ function Product({ id, title, price, description, category, image, rating }) {
                     <p className='text-xs text-gray-500'>Free Next Day Delivery</p>
                 </div>
             )}
-            <button className='mt-auto button'>Add to Basket</button>
+            <button onClick={addItemToBasket} className='mt-auto button'>Add to Basket</button>
         </div>
     )
 }
